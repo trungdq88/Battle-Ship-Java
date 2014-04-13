@@ -129,6 +129,7 @@ public class Game implements Serializable {
 	    {
 	        write.writeObject((Serializable)gameState);
 	        System.out.println("Game saved to file: " + filename);
+	        if (write != null) write.close();
 	    }
 //	    catch(NotSerializableException nse)
 //	    {
@@ -154,11 +155,12 @@ public class Game implements Serializable {
 	        	player = data.player;
 	        	enemy = data.enemy;
 	        	playwithhuman = data.playwithhuman;
+	        	if (inFile != null) inFile.close();
 	        	return true;
 	        } else {
 		        System.out.println("Cannot load game from this file: file data wrong!");
 	        }
-	        
+	        if (inFile != null) inFile.close();
 	    }
 	    catch(ClassNotFoundException cnfe)
 	    {
