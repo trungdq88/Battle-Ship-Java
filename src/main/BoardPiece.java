@@ -1,6 +1,12 @@
 package main;
 
-public class BoardPiece {
+import java.io.Serializable;
+
+public class BoardPiece  implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5520829623514275078L;
 	public BoardPieceState state;
 	String present;
 	int type;

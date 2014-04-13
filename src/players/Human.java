@@ -5,18 +5,19 @@ import java.util.Scanner;
 
 import main.Board;
 import main.BoardPieceState;
+import main.Game;
 import main.Player;
 import main.Ship;
 
 public class Human extends Player {
 
-	Scanner in = new Scanner(System.in);;
 
 	public Human() {
 		ships = new ArrayList<Ship>();
 	}
 
-	public Human(Board board, String name) {
+	public Human(Game game, Board board, String name) {
+		this.game = game;
 		this.board = board;
 		this.name = name;
 		ships = new ArrayList<Ship>();
@@ -24,6 +25,7 @@ public class Human extends Player {
 
 	@Override
 	public void placeShips() {
+		Scanner in = new Scanner(System.in);
 		ships = new ArrayList<Ship>();
 		System.out.println("==================== " + this.name
 				+ " place ships ====================");
@@ -105,25 +107,35 @@ public class Human extends Player {
 	@Override
 	public void shoot(Board board) {
 
+		Scanner in = new Scanner(System.in);
 		System.out.println(name + " go:");
 		System.out.println("Enter your moves in the form 'C4'");
 		
 		String move = "";
 		String valid = "";
 
+		System.out.println("('exit' - quit game; 'save' - save game)");	
 		System.out.println("Enter move: ");	
 		move = in.nextLine();
 			
-		valid = board.checkMove(move);
-		
-		while(valid != "ok") {
-			System.out.println("ERROR: "+ valid);
-			move = in.nextLine();
+		if (move.equals("exit")) {
+			System.out.println("Goodbye");
+			System.exit(0);
+		} else if (move.equals("save")) {
+			game.yourturn = !game.yourturn; // Player can continue to move after saving
+			game.saveGame();
+		} else {
 			valid = board.checkMove(move);
+			
+			while(valid != "ok") {
+				System.out.println("ERROR: "+ valid);
+				move = in.nextLine();
+				valid = board.checkMove(move);
+			}
+			
+			
+			processMove(board, move);
 		}
-		
-		
-		processMove(board, move);
 	}
 	
 	public void processMove(Board board, String move){

@@ -1,22 +1,37 @@
 package main;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.NotSerializableException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 import players.Human;
 
-public class Game {
+public class Game implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1857097362692281859L;
 	Player player; // It's you
 	Player enemy; // Your friend, or an AI
 
 	boolean gameover = false;
 
-	boolean yourturn = true; // You always go first.
+	public boolean yourturn = true; // You always go first.
 
 	public Game() {
 		init();
 	}
 
 	public void init() {
-		player = new Human(new Board(), "Player 1");
-		enemy = new Human(new Board(), "Player 2");
+		player = new Human(this, new Board(), "Player 1");
+		enemy = new Human(this, new Board(), "Player 2");
 	}
 
 	public void play() {
@@ -34,21 +49,28 @@ public class Game {
 		System.out.println("=                                                 =");
 		System.out.println("===================================================");
 		
-		while (!gameover) {
-			move();
-			clearScreen();
-		}
+		startTheLoop();
 	}
 
+	public void startTheLoop() {
+		while (!gameover) {
+			move();
+		}
+	}
+	
 	public void move() {
 		System.out.println("                " + this.player.name
 				+ "                                       " + this.enemy.name);
 
 		Board.printBoard(player.board, enemy.board, yourturn);
 		if (yourturn) {
+			player.game.yourturn = yourturn; // This is important!
 			player.shoot(enemy.board);
+			yourturn = player.game.yourturn;
 		} else {
+			enemy.game.yourturn = yourturn; // This is important!
 			enemy.shoot(player.board);
+			yourturn = enemy.game.yourturn;
 		}
 		yourturn = !yourturn;
 		gameover = checkGameOver();
@@ -88,4 +110,68 @@ public class Game {
 		System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 	}
 
+	public void saveGame() {
+		// yourturn
+		// player
+		// enemy
+		GameState gameState = new GameState();
+		gameState.yourturn = yourturn;
+		gameState.player = player;
+		gameState.enemy = enemy;
+		
+		try(ObjectOutputStream write= new ObjectOutputStream (new FileOutputStream("BattleShip.txt")))
+	    {
+	        write.writeObject((Serializable)gameState);
+	        System.out.println("Game saved to file: BattleShip.txt!");
+	    }
+//	    catch(NotSerializableException nse)
+//	    {
+//	        System.out.println("Something wrong! " + nse.getMessage());
+//	    }
+	    catch(IOException eio)
+	    {
+	        System.out.println("Could not create file! Please check the read/write permission.");
+	        eio.printStackTrace();
+	    }
+	}
+
+
+	public void loadGame(String path) {
+		GameState data = null;
+
+	    try(ObjectInputStream inFile = new ObjectInputStream(new FileInputStream(path)))
+	    {
+	        data = (GameState)inFile.readObject();
+	        
+	        if (data != null) {
+	        	yourturn = data.yourturn;
+	        	player = data.player;
+	        	enemy = data.enemy;
+	        	
+	        	
+	    		System.out.println("===================================================");
+	    		System.out.println("=                                                 =");
+	    		System.out.println("=     *** *** *** GAME RE-STARTED *** *** ***     =");
+	    		System.out.println("=                                                 =");
+	    		System.out.println("===================================================");
+	    		startTheLoop();
+	        } else {
+		        System.out.println("Cannot load game from this file: file data wrong!");
+	        }
+	        
+	    }
+	    catch(ClassNotFoundException cnfe)
+	    {
+	        System.out.println("Cannot load game from this file: file data wrong!");
+	    }
+	    catch(FileNotFoundException fnfe)
+	    {
+	        System.out.println("File not found: " + path);
+	    }
+	    catch(IOException e)
+	    {
+	        System.out.println("Cannot load game from this file: read failed!");
+	    }
+
+	}
 }

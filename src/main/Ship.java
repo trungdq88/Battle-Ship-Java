@@ -1,7 +1,13 @@
 package main;
 
+import java.io.Serializable;
 
-public class Ship {
+
+public class Ship implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5097733353200317795L;
 	/**
 	 * Possible type:
 		1•	Aircraft carrier (5 squares)

@@ -1,13 +1,21 @@
 package main;
 
+import java.io.Serializable;
 import java.util.List;
 
-public abstract class Player {
+public abstract class Player implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1022976898280162790L;
+
 	public abstract void placeShips();
 
 	public static final int MAX_SHIP_PER_USER = 5;
 
 	public Board board;
+	
+	public Game game;
 
 	public String name;
 

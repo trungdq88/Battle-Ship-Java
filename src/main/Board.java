@@ -1,7 +1,13 @@
 package main;
 
-public class Board {
+import java.io.Serializable;
 
+public class Board implements Serializable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1559359524539247451L;
 	public static final int DEFAULT_WIDTH = 10;
 	public static final int DEFAULT_HEIGHT = 10;
 
