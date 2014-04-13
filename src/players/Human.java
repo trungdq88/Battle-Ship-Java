@@ -12,6 +12,11 @@ import main.Ship;
 public class Human extends Player {
 
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1648355870712332336L;
+
 	public Human() {
 		ships = new ArrayList<Ship>();
 	}
@@ -107,6 +112,14 @@ public class Human extends Player {
 	@Override
 	public void shoot(Board board) {
 
+
+		System.out.println("             " + this.game.player.name
+				+ "                            " + this.game.enemy.name);
+
+		Board.printBoard(this.game.player.board, this.game.enemy.board, this.game.yourturn);
+		
+		//////////////
+		
 		Scanner in = new Scanner(System.in);
 		System.out.println(name + " go:");
 		System.out.println("Enter your moves in the form 'C4'");

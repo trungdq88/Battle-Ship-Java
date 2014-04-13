@@ -12,31 +12,35 @@ import java.util.ArrayList;
 import java.util.List;
 
 import players.Human;
+import players.RandomAI;
 
 public class Game implements Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1857097362692281859L;
-	Player player; // It's you
-	Player enemy; // Your friend, or an AI
+	public Player player; // It's you
+	public Player enemy; // Your friend, or an AI
 
 	boolean gameover = false;
 
 	public boolean yourturn = true; // You always go first.
 
-	public Game() {
-		init();
+	public Game(boolean playwithhuman) {
+		if (playwithhuman) {
+			player = new Human(this, new Board(), "Player 1");
+			enemy = new Human(this, new Board(), "Player 2");
+		} else {
+			player = new Human(this, new Board(), "Player 1");
+			enemy = new RandomAI(this, new Board(), "Computer");
+		}
+		
 	}
 
-	public void init() {
-		player = new Human(this, new Board(), "Player 1");
-		enemy = new Human(this, new Board(), "Player 2");
-	}
 
 	public void play() {
 		System.out.println("                " + this.player.name
-				+ "                                       " + this.enemy.name);
+				+ "                         " + this.enemy.name);
 
 		Board.printBoard(player.board, enemy.board);
 		player.placeShips();
@@ -59,10 +63,6 @@ public class Game implements Serializable {
 	}
 	
 	public void move() {
-		System.out.println("                " + this.player.name
-				+ "                                       " + this.enemy.name);
-
-		Board.printBoard(player.board, enemy.board, yourturn);
 		if (yourturn) {
 			player.game.yourturn = yourturn; // This is important!
 			player.shoot(enemy.board);
