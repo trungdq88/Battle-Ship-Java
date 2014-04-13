@@ -132,7 +132,7 @@ public class Human extends Player {
 		String message = "";
 
 
-		if(board.pieces[((int)move.charAt(0)-65)][((int)move.charAt(1)-49)].used){   
+		if(board.pieces[((int)move.charAt(0)-65)][((int)move.charAt(1)-49 + 1)].used){   
 			result = BoardPieceState.STATE_HIT;
 			message = "Hit!";
 		}
@@ -140,8 +140,8 @@ public class Human extends Player {
 			result = BoardPieceState.STATE_MISS;
 			message = "Miss!";
 		}
-		board.pieces[((int)move.charAt(0)-65)][((int)move.charAt(1)-49)].state = result;
-		board.pieces[((int)move.charAt(0)-65)][((int)move.charAt(1)-49)].selected = true;
+		board.pieces[((int)move.charAt(0)-65)][((int)move.charAt(1)-49 + 1)].state = result;
+		board.pieces[((int)move.charAt(0)-65)][((int)move.charAt(1)-49 + 1)].selected = true;
 			
 		System.out.println(this.name + " " + message);
 	}

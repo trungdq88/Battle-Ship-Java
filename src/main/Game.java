@@ -27,7 +27,7 @@ public class Game {
 		player.placeShips();
 		enemy.placeShips();
 
-
+		clearScreen();
 		System.out.println("===================================================");
 		System.out.println("=                                                 =");
 		System.out.println("=        *** *** *** GAME START *** *** ***       =");
@@ -36,10 +36,15 @@ public class Game {
 		
 		while (!gameover) {
 			move();
+			clearScreen();
 		}
 	}
 
 	public void move() {
+		System.out.println("                " + this.player.name
+				+ "                                       " + this.enemy.name);
+
+		Board.printBoard(player.board, enemy.board, yourturn);
 		if (yourturn) {
 			player.shoot(enemy.board);
 		} else {
@@ -79,5 +84,8 @@ public class Game {
 		return false;
 	}
 
+	private void clearScreen() {
+		System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+	}
 
 }
