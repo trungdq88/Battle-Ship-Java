@@ -10,6 +10,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import players.Human;
 import players.RandomAI;
@@ -25,8 +26,11 @@ public class Game implements Serializable {
 	boolean gameover = false;
 
 	public boolean yourturn = true; // You always go first.
+	public boolean playwithhuman = true;
+	
 
 	public Game(boolean playwithhuman) {
+		this.playwithhuman = playwithhuman;
 		if (playwithhuman) {
 			player = new Human(this, new Board(), "Player 1");
 			enemy = new Human(this, new Board(), "Player 2");
@@ -118,11 +122,13 @@ public class Game implements Serializable {
 		gameState.yourturn = yourturn;
 		gameState.player = player;
 		gameState.enemy = enemy;
+		gameState.playwithhuman = playwithhuman;
 		
-		try(ObjectOutputStream write= new ObjectOutputStream (new FileOutputStream("BattleShip.txt")))
+		String filename = "battleship_" + (new Random()).nextInt(10000) + ".txt";
+		try(ObjectOutputStream write= new ObjectOutputStream (new FileOutputStream(filename)))
 	    {
 	        write.writeObject((Serializable)gameState);
-	        System.out.println("Game saved to file: BattleShip.txt!");
+	        System.out.println("Game saved to file: " + filename);
 	    }
 //	    catch(NotSerializableException nse)
 //	    {
@@ -136,7 +142,7 @@ public class Game implements Serializable {
 	}
 
 
-	public void loadGame(String path) {
+	public boolean loadGame(String path) {
 		GameState data = null;
 
 	    try(ObjectInputStream inFile = new ObjectInputStream(new FileInputStream(path)))
@@ -147,14 +153,8 @@ public class Game implements Serializable {
 	        	yourturn = data.yourturn;
 	        	player = data.player;
 	        	enemy = data.enemy;
-	        	
-	        	
-	    		System.out.println("===================================================");
-	    		System.out.println("=                                                 =");
-	    		System.out.println("=     *** *** *** GAME RE-STARTED *** *** ***     =");
-	    		System.out.println("=                                                 =");
-	    		System.out.println("===================================================");
-	    		startTheLoop();
+	        	playwithhuman = data.playwithhuman;
+	        	return true;
 	        } else {
 		        System.out.println("Cannot load game from this file: file data wrong!");
 	        }
@@ -173,5 +173,18 @@ public class Game implements Serializable {
 	        System.out.println("Cannot load game from this file: read failed!");
 	    }
 
+    	return false;
+	}
+
+
+	void playFromSave() {
+
+		System.out.println("===================================================");
+		System.out.println("=                                                 =");
+		System.out.println("=     *** *** *** GAME RE-STARTED *** *** ***     =");
+		System.out.println("=                                                 =");
+		System.out.println("===================================================");
+		startTheLoop();
+		
 	}
 }

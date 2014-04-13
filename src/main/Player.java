@@ -14,7 +14,7 @@ public abstract class Player implements Serializable {
 	public static final int MAX_SHIP_PER_USER = 5;
 
 	public Board board;
-	
+
 	public Game game;
 
 	public String name;
@@ -42,26 +42,28 @@ public abstract class Player implements Serializable {
 		return typeCount == shipTypes.length;
 	}
 
-	public void placeBoard(Board board, char layout, Ship current, String locale) {
-
+	public boolean placeBoard(Board board, char layout, Ship current,
+			String locale) {
 		boolean overlap = false;
+		try {
+			if (layout == 'H') {
+				for (int x = ((int) locale.charAt(1) - 49 + 1); x < ((int) locale
+						.charAt(1) - 49 + 1) + current.getLength(); x++) {
+					if (board.pieces[((int) locale.charAt(0) - 65)][x].type != current.type
+							&& board.pieces[((int) locale.charAt(0) - 65)][x].used == true)
+						overlap = true;
+				}
+			} else { // layout == 'V'
+				for (int x = ((int) locale.charAt(0) - 65); x < ((int) locale
+						.charAt(0) - 65) + current.getLength(); x++) {
+					if (board.pieces[x][((int) locale.charAt(1) - 49 + 1)].type != current.type
+							&& board.pieces[x][((int) locale.charAt(1) - 49 + 1)].used == true)
+						overlap = true;
+				}
+			}
+			if (overlap == true)
+				return false;
 
-		if (layout == 'H') {
-			for (int x = ((int) locale.charAt(1) - 49 + 1); x < ((int) locale
-					.charAt(1) - 49 + 1) + current.getLength(); x++) {
-				if (board.pieces[((int) locale.charAt(0) - 65)][x].type != current.type
-						&& board.pieces[((int) locale.charAt(0) - 65)][x].used == true)
-					overlap = true;
-			}
-		} else { // layout == 'V'
-			for (int x = ((int) locale.charAt(0) - 65); x < ((int) locale
-					.charAt(0) - 65) + current.getLength(); x++) {
-				if (board.pieces[x][((int) locale.charAt(1) - 49 + 1)].type != current.type
-						&& board.pieces[x][((int) locale.charAt(1) - 49 + 1)].used == true)
-					overlap = true;
-			}
-		}
-		if (!overlap) { // If ships don't overlap
 			if (current.placed) {
 				if (current.orientation == 'H') {
 					for (int x = ((int) current.location.charAt(1) - 49 + 1); x < ((int) current.location
@@ -94,12 +96,34 @@ public abstract class Player implements Serializable {
 					board.pieces[x][((int) locale.charAt(1) - 49 + 1)].type = current.type;
 				}
 			}
-			current.placed = true;
-			current.location = locale;
-			current.orientation = layout;
-			System.out.println(this.name);
-			System.out.println(this.board);
-		} else
-			System.out.println("Invalid Placement. Ships Overlap.");
+		} catch (ArrayIndexOutOfBoundsException e) {
+			// validate process was wrong
+			return false;
+		}
+		current.placed = true;
+		current.location = locale;
+		current.orientation = layout;
+		return true;
+	}
+
+	
+	public void processMove(Board board, String move){
+		
+		BoardPieceState result = BoardPieceState.STATE_MISS;
+		String message = "";
+
+
+		if(board.pieces[((int)move.charAt(0)-65)][((int)move.charAt(1)-49 + 1)].used){   
+			result = BoardPieceState.STATE_HIT;
+			message = "Hit!";
+		}
+		else{
+			result = BoardPieceState.STATE_MISS;
+			message = "Miss!";
+		}
+		board.pieces[((int)move.charAt(0)-65)][((int)move.charAt(1)-49 + 1)].state = result;
+		board.pieces[((int)move.charAt(0)-65)][((int)move.charAt(1)-49 + 1)].selected = true;
+			
+		System.out.println(this.name + " " + message);
 	}
 }

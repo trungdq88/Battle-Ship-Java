@@ -40,7 +40,10 @@ public class Main {
 	    	System.out.println("Enter file name: ");
 			in.nextLine();
 			String path = in.nextLine();
-	    	game.loadGame(path);
+	    	if (game.loadGame(path)) {
+		    	playwithhuman = game.playwithhuman;
+		    	game.playFromSave();
+	    	}
 	    } else if (number == 4) {
 			System.out.println("Good Bye!");
 			System.exit(0);
