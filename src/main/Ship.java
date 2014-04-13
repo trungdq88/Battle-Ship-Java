@@ -10,7 +10,7 @@ public class Ship {
 		4•	Submarine (3 squares)
 		5•	Patrol boat (2 squares)
 	 */
-	int type;
+	public int type;
 	private int length;
 	boolean placed;
 	boolean destroyed;

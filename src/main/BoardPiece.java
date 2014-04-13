@@ -3,6 +3,9 @@ package main;
 public class BoardPiece {
 	BoardPieceState state;
 	String present;
+	int type;
+	boolean used;
+	public boolean selected;
 
 	public BoardPiece() {
 		state = BoardPieceState.STATE_FREE;
@@ -11,15 +14,15 @@ public class BoardPiece {
 	public String getPresent() {
 		switch (state) {
 		case STATE_FREE:
-			return "___|";
+			return "__|";
 		case STATE_BUSY:
-			return "_#_|";
+			return "_#|";
 		case STATE_HIT:
-			return "_X_|";
+			return "_X|";
 		case STATE_MISS:
-			return "_o_|";
+			return "_o|";
 		default:
-			return "????";
+			return "???";
 		}
 	}
 }
