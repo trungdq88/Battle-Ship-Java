@@ -41,7 +41,7 @@ public class RandomAI extends Player {
 				ran2 = rnd.nextInt(10);
 			}
 		}
-		System.out.println("Computer have placed the ships");
+		System.out.println(this.name + " have placed the ships");
 		System.out.println(this.board);
 	}
 
