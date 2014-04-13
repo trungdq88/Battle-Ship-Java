@@ -41,24 +41,41 @@ public class Game {
 
 	public void move() {
 		if (yourturn) {
-			enemy.board = player.shoot(enemy.board);
+			player.shoot(enemy.board);
 		} else {
-			player.board = enemy.shoot(player.board);
+			enemy.shoot(player.board);
 		}
 		yourturn = !yourturn;
 		gameover = checkGameOver();
 	}
 
 	private boolean checkGameOver() {
-		if (player.ships.size() == 0) {
+		
+		// Check if enemy win
+		int playerDeaths = 0;
+		for (int i = 0; i < Board.DEFAULT_HEIGHT; ++i) {
+			for (int j = 0; j < Board.DEFAULT_WIDTH; ++j) {
+				playerDeaths += player.board.pieces[i][j].state == BoardPieceState.STATE_HIT ? 1 : 0;
+			}
+		}
+		
+		if (playerDeaths == 17) {
 			System.out.println(enemy.name + " win!");
 			return true;
 		}
-		if (enemy.ships.size() == 0) {
+		
+		// Check if player win
+		int enemyDeaths = 0;
+		for (int i = 0; i < Board.DEFAULT_HEIGHT; ++i) {
+			for (int j = 0; j < Board.DEFAULT_WIDTH; ++j) {
+				enemyDeaths += enemy.board.pieces[i][j].state == BoardPieceState.STATE_HIT ? 1 : 0;
+			}
+		}
+		
+		if (enemyDeaths == 17) {
 			System.out.println(player.name + " win!");
 			return true;
 		}
-
 		return false;
 	}
 

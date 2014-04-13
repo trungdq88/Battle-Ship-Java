@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import main.Board;
+import main.BoardPieceState;
 import main.Player;
 import main.Ship;
 
@@ -102,7 +103,7 @@ public class Human extends Player {
 	}
 
 	@Override
-	public Board shoot(Board board) {
+	public void shoot(Board board) {
 
 		System.out.println(name + " go:");
 		System.out.println("Enter your moves in the form 'C4'");
@@ -122,105 +123,26 @@ public class Human extends Player {
 		}
 		
 		
-		return processMove(board, move);
+		processMove(board, move);
 	}
 	
-	public void processMove(String move){
+	public void processMove(Board board, String move){
 		
-		count++;
-		char himi = ' ';
+		BoardPieceState result = BoardPieceState.STATE_MISS;
 		String message = "";
-		
-		if(turn == 'X'){
-			if(eboard[((int)move.charAt(0)-65)][((int)move.charAt(1)-49)].used){   
-				himi = 'X';
-				message = "Hit!";
-			}
-			else{
-				himi = 'o';
-				message = "Miss!";
-			}
-			eboard[((int)move.charAt(0)-65)][((int)move.charAt(1)-49)].piece = "_"+himi+"_|";
-			eboard[((int)move.charAt(0)-65)][((int)move.charAt(1)-49)].selected = true;
+
+
+		if(board.pieces[((int)move.charAt(0)-65)][((int)move.charAt(1)-49)].used){   
+			result = BoardPieceState.STATE_HIT;
+			message = "Hit!";
 		}
 		else{
-			if(pboard[((int)move.charAt(0)-65)][((int)move.charAt(1)-49)].used){   
-				himi = 'X';
-				message = "Hit!";
-				AI.himi2 = AI.himi;
-				AI.himi = 'H';
-				AI.count++;
-			}
-			else{
-				himi = 'o';
-				message = "Miss!";
-				AI.himi2 = AI.himi;
-				AI.himi = 'M';
-				AI.count++;
-			}
-			pboard[((int)move.charAt(0)-65)][((int)move.charAt(1)-49)].piece = "_"+himi+"_|";
-			pboard[((int)move.charAt(0)-65)][((int)move.charAt(1)-49)].selected = true;
+			result = BoardPieceState.STATE_MISS;
+			message = "Miss!";
 		}
-		
-		int counter = 0;
-		if(himi == 'X'){
-			if(turn == 'X'){
-				int stype = eboard[((int)move.charAt(0)-65)][((int)move.charAt(1)-49)].type;
-				
-				for(int x=0;x<6;x++){
-					for(int y=0;y<6;y++){
-						if(eboard[x][y].selected && eboard[x][y].type == stype)
-							counter++;
-					}
-				}
-				if(counter == (stype + 1)){
-					String xship = "";
-					if(stype == 1){
-						xship = "Submarine!";
-						esub.destroyed = true;
-					}
-					else if(stype == 2){
-						xship = "Destroyer!";
-						edestroyer.destroyed = true;
-					}
-					else{
-						xship = "Battleship!";
-						ebattleship.destroyed = true;
-					}
-					message += " You destroyed the " + xship;
-				}
-			}
-			else{
-				int stype = pboard[((int)move.charAt(0)-65)][((int)move.charAt(1)-49)].type;
-				
-				for(int x=0;x<6;x++){
-					for(int y=0;y<6;y++){
-						if(pboard[x][y].selected && pboard[x][y].type == stype)
-							counter++;
-					}
-				}
-				if(counter == (stype + 1)){
-					String xship = "";
-					if(stype == 1){
-						xship = "Submarine!";
-						sub.destroyed = true;
-					}
-					else if(stype == 2){
-						xship = "Destroyer!";
-						destroyer.destroyed = true;
-					}
-					else{
-						xship = "Battleship!";
-						battleship.destroyed = true;
-					}
-					message += " They've destroyed your " + xship;
-					AI.himi = 'M';  //Make it choose a random # next time, because ship destroyed
-					AI.himi2 = 'M';
-				}
-			}
-		}
-		if(turn == 'O')
-			message = "Enemy " + message;
-		System.out.println(message);
+		board.pieces[((int)move.charAt(0)-65)][((int)move.charAt(1)-49)].state = result;
+		board.pieces[((int)move.charAt(0)-65)][((int)move.charAt(1)-49)].selected = true;
+			
+		System.out.println(this.name + " " + message);
 	}
 }

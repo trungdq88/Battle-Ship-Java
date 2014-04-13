@@ -21,7 +21,7 @@ public abstract class Player {
 	 *            The board to shoot
 	 * @return the board state after the shoot
 	 */
-	public abstract Board shoot(Board board);
+	public abstract void shoot(Board board);
 
 	public boolean isAllShipPlaced() {
 		boolean shipTypes[] = { false, false, false, false, false };

@@ -1,10 +1,10 @@
 package main;
 
 public class BoardPiece {
-	BoardPieceState state;
+	public BoardPieceState state;
 	String present;
 	int type;
-	boolean used;
+	public boolean used;
 	public boolean selected;
 
 	public BoardPiece() {

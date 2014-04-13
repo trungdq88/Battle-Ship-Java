@@ -5,7 +5,7 @@ public class Board {
 	public static final int DEFAULT_WIDTH = 10;
 	public static final int DEFAULT_HEIGHT = 10;
 
-	BoardPiece[][] pieces = new BoardPiece[DEFAULT_WIDTH][DEFAULT_HEIGHT];
+	public BoardPiece[][] pieces = new BoardPiece[DEFAULT_WIDTH][DEFAULT_HEIGHT];
 
 	public Board() {
 		for (int i = 0; i < pieces.length; ++i) {
