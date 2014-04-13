@@ -1,0 +1,51 @@
+package test;
+
+import players.RandomAI;
+import players.SmartAI;
+import main.Board;
+import main.BoardPieceState;
+import main.Player;
+
+
+public class SmartAITest {
+
+	private static Player ai = new SmartAI(null, new Board(), "SmartAI");
+	private static Player enemy = new RandomAI(null, new Board(), "Random Guy");
+	public static void main(String args[]) {
+		
+		ai.placeShips();
+		enemy.placeShips();
+		int numberOfTestCases = 1000;
+		int score = 0;
+		for (int i = 0; i < numberOfTestCases; ++i) {
+			int count = 0;
+			enemy = new RandomAI(null, new Board(), "Random Guy");
+			enemy.placeShips();
+			while (!checkGameOver()) {
+				count++;
+				System.out.println("count = " + count);
+				ai.shoot(enemy.board);
+			}
+			score += count;
+		}
+		System.out.println("=====================================================");
+		System.out.println("|| SmartAI score: " + (1.0*score / numberOfTestCases));
+		System.out.println("=====================================================");
+	}
+	
+	private static boolean checkGameOver() {
+		// Check if player win
+		int enemyDeaths = 0;
+		for (int i = 0; i < Board.DEFAULT_HEIGHT; ++i) {
+			for (int j = 0; j < Board.DEFAULT_WIDTH; ++j) {
+				enemyDeaths += enemy.board.pieces[i][j].state == BoardPieceState.STATE_HIT ? 1 : 0;
+			}
+		}
+		
+		if (enemyDeaths == 17) {
+			System.out.println(ai.name + " win!");
+			return true;
+		}
+		return false;
+	}
+}

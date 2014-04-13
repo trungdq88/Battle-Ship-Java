@@ -1,11 +1,12 @@
-package players;
+package test;
 
+import players.RandomAI;
 import main.Board;
 import main.BoardPieceState;
 import main.Player;
 
 
-public class AITest {
+public class RandomAITest {
 
 	private static Player ai = new RandomAI(null, new Board(), "RandomAI");
 	private static Player enemy = new RandomAI(null, new Board(), "Random Guy");
@@ -26,7 +27,9 @@ public class AITest {
 			}
 			score += count;
 		}
-		System.out.println("RandomAI score: " + (1.0*score / numberOfTestCases));
+		System.out.println("=====================================================");
+		System.out.println("|| RandomAI score: " + (1.0*score / numberOfTestCases));
+		System.out.println("=====================================================");
 	}
 	
 	private static boolean checkGameOver() {

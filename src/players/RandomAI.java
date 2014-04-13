@@ -8,6 +8,12 @@ import main.Game;
 import main.Player;
 import main.Ship;
 
+/**
+ * RandomAI: does what it's name said. Everything is random.
+ * 
+ * Avg score: 95
+ *
+ */
 public class RandomAI extends Player {
 
 	/**

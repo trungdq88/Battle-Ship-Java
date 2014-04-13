@@ -101,7 +101,9 @@ public class Board implements Serializable {
 	}
 	
 	public String checkMove(String move){
-
+		if (move == null || move.length() == 0) {
+			return "Move cannot be empty";
+		}
 		try {
 			if(((int)move.charAt(0)-65) >= 10)
 				return "Invalid Row. Can only be A-J. Enter another move: ";	
